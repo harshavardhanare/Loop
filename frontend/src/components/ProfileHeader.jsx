@@ -212,7 +212,7 @@ const ProfileHeader = ({ userData, onSave, isOwnProfile }) => {
 							className='text-gray-600 text-center w-full'
 						/>
 					) : (
-						<p className='text-gray-600'>{userData.headline}</p>
+						<p className='text-gray-600'>Loop</p>
 					)}
 
 					<div className='flex justify-center items-center mt-2'>

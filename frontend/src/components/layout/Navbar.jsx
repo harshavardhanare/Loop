@@ -1,7 +1,9 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios";
 import { Link } from "react-router-dom";
-import { Bell, Home, LogOut, User, Users } from "lucide-react";
+import { Bell, Home, LogOut, User, Users,MessageCircle  } from "lucide-react";
+import Loop from '../../Landing/src/assets/images/cursor.png';
+
 
 const Navbar = () => {
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
@@ -35,7 +37,12 @@ const Navbar = () => {
 				<div className='flex justify-between items-center py-3'>
 					<div className='flex items-center space-x-4'>
 						<Link to='/'>
-							<img className='h-8 rounded' src='/small-logo.png' alt='LinkedIn' />
+						<div className="w-full flex items-center justify-center space-x-3">
+  <img className="h-10 w-auto" src={Loop} alt="Loop" />
+  <h1 className="text-xl font-extrabold text-violet-500 tracking-tight">
+    Loop
+  </h1>
+</div>
 						</Link>
 					</div>
 					<div className='flex items-center gap-2 md:gap-6'>
@@ -44,6 +51,10 @@ const Navbar = () => {
 								<Link to={"/"} className='text-neutral flex flex-col items-center'>
 									<Home size={20} />
 									<span className='text-xs hidden md:block'>Home</span>
+								</Link>
+								<Link to={"/messages"} className='text-neutral flex flex-col items-center'>
+									<MessageCircle  size={20} />
+									<span className='text-xs hidden md:block'>Messages</span>
 								</Link>
 								<Link to='/network' className='text-neutral flex flex-col items-center relative'>
 									<Users size={20} />

@@ -19,7 +19,7 @@ export default function Sidebar({ user }) {
 					/>
 					<h2 className='text-xl font-semibold mt-2'>{user.name}</h2>
 				</Link>
-				<p className='text-info'>{user.headline}</p>
+				<p className='text-info'>Loop</p>
 				<p className='text-info text-xs'>{user.connections.length} connections</p>
 			</div>
 			<div className='border-t border-base-100 p-4'>

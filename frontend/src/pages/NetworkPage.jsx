@@ -1,9 +1,11 @@
 import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import Sidebar from "../components/Sidebar";
 import { UserPlus } from "lucide-react";
 import FriendRequest from "../components/FriendRequest";
 import UserCard from "../components/UserCard";
+import ChatPage from "./ChatPage";
 
 const NetworkPage = () => {
 	const { data: user } = useQuery({ queryKey: ["authUser"] });
@@ -17,6 +19,20 @@ const NetworkPage = () => {
 		queryKey: ["connections"],
 		queryFn: () => axiosInstance.get("/connections"),
 	});
+
+	// State to manage the current chat recipient
+	const [recipientId, setRecipientId] = useState(null);
+	const [isChatOpen, setIsChatOpen] = useState(false);
+
+	const handleUserChatClick = (id) => {
+		setRecipientId(id);
+		setIsChatOpen(true);
+	};
+
+	const closeChat = () => {
+		setIsChatOpen(false);
+		setRecipientId(null);
+	};
 
 	return (
 		<div className='grid grid-cols-1 lg:grid-cols-4 gap-6'>
@@ -53,14 +69,23 @@ const NetworkPage = () => {
 							<h2 className='text-xl font-semibold mb-4'>My Connections</h2>
 							<div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4'>
 								{connections.data.map((connection) => (
-									<UserCard key={connection._id} user={connection} isConnection={true} />
+									<UserCard 
+										key={connection._id} 
+										user={connection} 
+										isConnection={true} 
+										onChatClick={() => handleUserChatClick(connection._id)} // Handle chat click
+									/>
 								))}
 							</div>
 						</div>
 					)}
 				</div>
 			</div>
+
+			{/* Chat Page Modal */}
+			{isChatOpen && <ChatPage recipientId={recipientId} onClose={closeChat} />}
 		</div>
 	);
 };
+
 export default NetworkPage;

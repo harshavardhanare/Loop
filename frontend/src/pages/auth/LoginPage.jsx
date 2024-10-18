@@ -1,11 +1,17 @@
 import { Link } from "react-router-dom";
 import LoginForm from "../../components/auth/LoginForm";
+import Loop from '../../Landing/src/assets/images/cursor.png';
 
 const LoginPage = () => {
 	return (
 		<div className='min-h-screen flex flex-col justify-center py-12 sm:px-6 lg:px-8'>
 			<div className='sm:mx-auto sm:w-full sm:max-w-md'>
-				<img className='mx-auto h-40 w-auto' src='/logo.svg' alt='LinkedIn' />
+			<div className="w-full flex items-center justify-center space-x-3">
+  <img className="h-16 w-auto" src={Loop} alt="Loop" />
+  <h1 className="text-4xl font-extrabold text-violet-500 tracking-tight">
+    Loop
+  </h1>
+</div>
 				<h2 className=' text-center text-3xl font-extrabold text-gray-900'>Sign in to your account</h2>
 			</div>
 
@@ -18,7 +24,7 @@ const LoginPage = () => {
 								<div className='w-full border-t border-gray-300'></div>
 							</div>
 							<div className='relative flex justify-center text-sm'>
-								<span className='px-2 bg-white text-gray-500'>New to LinkedIn?</span>
+								<span className='px-2 bg-white text-gray-500'>New to Loop?</span>
 							</div>
 						</div>
 						<div className='mt-6'>

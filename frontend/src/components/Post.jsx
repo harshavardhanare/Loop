@@ -103,7 +103,7 @@ const Post = ({ post }) => {
 							<Link to={`/profile/${post?.author?.username}`}>
 								<h3 className='font-semibold'>{post.author.name}</h3>
 							</Link>
-							<p className='text-xs text-info'>{post.author.headline}</p>
+							<p className='text-xs text-info'>Loop</p>
 							<p className='text-xs text-info'>
 								{formatDistanceToNow(new Date(post.createdAt), { addSuffix: true })}
 							</p>
