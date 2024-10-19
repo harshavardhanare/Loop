@@ -81,6 +81,9 @@ export const getSuggestedConnections = async (req, res) => {
           skillMatch: 1,
           companyMatch: 1,
           schoolMatch: 1,
+          skills: 1, // Include skills
+          experience: 1, // Include experience
+          education: 1, // Include education
         },
       },
     ]);
@@ -109,6 +112,9 @@ export const getSuggestedConnections = async (req, res) => {
           companyMatch: { $literal: 0 },
           schoolMatch: { $literal: 0 },
           totalMatch: { $literal: 0 },
+          skills: 1, // Include skills
+          experience: 1, // Include experience
+          education: 1, // Include education
         },
       },
     ]);
@@ -123,7 +129,7 @@ export const getSuggestedConnections = async (req, res) => {
         if (user.schoolMatch > 0) reasons.push("educational background");
         return {
           ...user,
-          reason: `Suggested based on ${reasons.join(", ")}`,
+          reason:` Suggested based on ${reasons.join(", ")}`,
         };
       } else {
         return {
@@ -132,6 +138,7 @@ export const getSuggestedConnections = async (req, res) => {
         };
       }
     });
+
     console.log("suggestedUsersWithReason", suggestedUsersWithReason);
     res.json(suggestedUsersWithReason);
   } catch (error) {

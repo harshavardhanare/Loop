@@ -139,17 +139,17 @@ const RecommendedUser = ({ user }) => {
           <div className="flex gap-2 mt-2 flex-wrap">
             {user.skillMatch === 1 && (
               <span className="bg-blue-50 text-blue-600 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
-                Similar Skills
+                {user.education[user?.education?.length - 1].school}
               </span>
             )}
             {user.companyMatch === 1 && (
               <span className="bg-green-50 text-green-600 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
-                Same Company
+                {user.experience[user?.experience?.length - 1].company}
               </span>
             )}
             {user.schoolMatch === 1 && (
               <span className="bg-purple-50 text-purple-600 text-xs font-medium px-3 py-1 rounded-full shadow-sm">
-                Same College
+                {user.skills[0]}
               </span>
             )}
           </div>
