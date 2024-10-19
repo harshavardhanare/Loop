@@ -1,14 +1,14 @@
 import React from "react";
-import { Navbar } from "./src/components/Navbar";
-import { Hero } from "./src/components/Hero";
-import { LogoTicker } from "./src/components/LogoTicker";
-import { Features } from "./src/components/Features";
-import { ProductShowcase } from "./src/components/ProductShowcase";
-import { FAQs } from "./src/components/FAQs";
-import { Pricing } from "./src/components/Pricingdemo";
-import { CallToAction } from "./src/components/CallToAction";
-import { Footer } from "./src/components/Footer";
-import { Banner } from "./src/components/Banner";
+import { Navbar } from "./components/Navbar";
+import { Hero } from "./components/Hero";
+import { LogoTicker } from "./components/LogoTicker";
+import { Features } from "./components/Features";
+import { ProductShowcase } from "./components/ProductShowcase";
+import { FAQs } from "./components/FAQs";
+import { Pricing } from "./components/Pricingdemo";
+import { CallToAction } from "./components/CallToAction";
+import { Footer } from "./components/Footer";
+import { Banner } from "./components/Banner";
 
 function App() {
   return (

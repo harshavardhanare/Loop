@@ -12,7 +12,9 @@ import NetworkPage from "./pages/NetworkPage";
 import PostPage from "./pages/PostPage";
 import ProfilePage from "./pages/ProfilePage";
 import Landing from "./Landing/Landing";
-import Messages from "./pages/Messages";
+import LoginForm from "./components/auth/LoginForm";
+import ManageUsers from "./components/admin/ManageUsers";
+import ViewUserPosts from "./components/admin/ViewUserPosts";
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
@@ -29,16 +31,29 @@ function App() {
       }
     },
   });
-
+  console.log("authUser", authUser);
   if (isLoading) return null; // Show nothing or a loader while checking authentication
-
+  const role = localStorage.getItem("userRole");
   return (
     <>
       <Routes>
         <Route
           path="/"
-          element={authUser ? <Layout><HomePage /></Layout> : <Landing />}
+          element={
+            authUser ? (
+              role !== "admin" ? (
+                <Layout>
+                  <HomePage />
+                </Layout>
+              ) : (
+                <ManageUsers />
+              )
+            ) : (
+              <Landing />
+            )
+          }
         />
+
         <Route
           path="/signup"
           element={!authUser ? <SignUpPage /> : <Navigate to="/" />}
@@ -47,26 +62,68 @@ function App() {
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to="/" />}
         />
-		<Route
-          path="/notifications"
-          element={authUser ? <Layout><NotificationsPage /></Layout> : <Landing />}
-        />
         <Route
-          path="/messages"
-          element={authUser ? <Layout><Messages /></Layout> : <Landing />}
+          path="/admin/login"
+          element={!authUser ? <LoginPage /> : <Navigate to="/" />}
         />
-		<Route
-          path="/network"
-          element={authUser ? <Layout><NetworkPage  /></Layout> : <Landing />}
-        />
-		<Route
-          path="/post/:postId"
-          element={authUser ? <Layout><PostPage /></Layout> : <Landing />}
-        />
-		<Route
-          path="/profile/:username"
-          element={authUser ? <Layout><ProfilePage /></Layout> : <Landing />}
-        />
+
+        {role === "admin" && (
+          <>
+            <Route path="/admin/posts/:userId" element={<ViewUserPosts />} />
+          </>
+        )}
+        {role === "user" && (
+          <>
+            <Route
+              path="/notifications"
+              element={
+                authUser ? (
+                  <Layout>
+                    <NotificationsPage />
+                  </Layout>
+                ) : (
+                  <Landing />
+                )
+              }
+            />
+            <Route
+              path="/network"
+              element={
+                authUser ? (
+                  <Layout>
+                    <NetworkPage />
+                  </Layout>
+                ) : (
+                  <Landing />
+                )
+              }
+            />
+            <Route
+              path="/post/:postId"
+              element={
+                authUser ? (
+                  <Layout>
+                    <PostPage />
+                  </Layout>
+                ) : (
+                  <Landing />
+                )
+              }
+            />
+            <Route
+              path="/profile/:username"
+              element={
+                authUser ? (
+                  <Layout>
+                    <ProfilePage />
+                  </Layout>
+                ) : (
+                  <Landing />
+                )
+              }
+            />
+          </>
+        )}
       </Routes>
       <Toaster />
     </>

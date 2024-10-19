@@ -31,6 +31,8 @@ app.use(express.json({ limit: "5mb" })); // parse JSON request bodies
 app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
+import adminRoutes from "./routes/admin.route.js";
+app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/users", userRoutes);
 app.use("/api/v1/posts", postRoutes);
 app.use("/api/v1/notifications", notificationRoutes);

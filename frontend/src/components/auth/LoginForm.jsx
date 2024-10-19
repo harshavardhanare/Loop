@@ -3,50 +3,85 @@ import { useState } from "react";
 import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
+import { useLocation } from "react-router-dom";
 
 const LoginForm = () => {
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const queryClient = useQueryClient();
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const queryClient = useQueryClient();
+  const location = useLocation();
+  const path = location.pathname;
+  const { mutate: loginMutation, isLoading } = useMutation({
+    mutationFn: (userData) => axiosInstance.post("/auth/login", userData),
+    onSuccess: (response) => {
+      const userRole = response.data.role;
+      console.log("userRole", response);
+      localStorage.setItem("userRole", userRole);
 
-	const { mutate: loginMutation, isLoading } = useMutation({
-		mutationFn: (userData) => axiosInstance.post("/auth/login", userData),
-		onSuccess: () => {
-			queryClient.invalidateQueries({ queryKey: ["authUser"] });
-		},
-		onError: (err) => {
-			toast.error(err.response.data.message || "Something went wrong");
-		},
-	});
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      toast.success("Login successful");
+    },
+    onError: (err) => {
+      toast.error(err.response.data.message || "Something went wrong");
+    },
+  });
+  const { mutate: adminloginMutation, isLoading: isLoading2 } = useMutation({
+    mutationFn: (userData) => axiosInstance.post("/admin/login", userData),
+    onSuccess: (response) => {
+      const userRole = response.data.role;
+      console.log("response", response);
+      localStorage.setItem("userRole", userRole);
 
-	const handleSubmit = (e) => {
-		e.preventDefault();
-		loginMutation({ username, password });
-	};
+      queryClient.invalidateQueries({ queryKey: ["authUser"] });
+      toast.success("Login successful");
+    },
+    onError: (err) => {
+      toast.error(err.response.data.message || "Something went wrong");
+    },
+  });
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!path.includes("admin")) {
+      loginMutation({ username, password });
+    } else {
+      adminloginMutation({ username, password });
+    }
+  };
 
-	return (
-		<form onSubmit={handleSubmit} className='space-y-4 w-full max-w-md'>
-			<input
-				type='text'
-				placeholder='Username'
-				value={username}
-				onChange={(e) => setUsername(e.target.value)}
-				className='input input-bordered w-full'
-				required
-			/>
-			<input
-				type='password'
-				placeholder='Password'
-				value={password}
-				onChange={(e) => setPassword(e.target.value)}
-				className='input input-bordered w-full'
-				required
-			/>
+  return (
+    <form onSubmit={handleSubmit} className="space-y-4 w-full max-w-md">
+      <input
+        type="text"
+        placeholder="Username"
+        value={username}
+        onChange={(e) => setUsername(e.target.value)}
+        className="input input-bordered w-full"
+        required
+      />
+      <input
+        type="password"
+        placeholder="Password"
+        value={password}
+        onChange={(e) => setPassword(e.target.value)}
+        className="input input-bordered w-full"
+        required
+      />
 
-			<button type='submit' className='btn btn-primary w-full'>
-				{isLoading ? <Loader className='size-5 animate-spin' /> : "Login"}
-			</button>
-		</form>
-	);
+<button type="submit" className="btn btn-primary w-full">
+        {path.includes("admin") ? (
+          isLoading2 ? (
+            <Loader className="size-5 animate-spin" />
+          ) : (
+            "Admin Login"
+          )
+        ) : isLoading ? (
+          <Loader className="size-5 animate-spin" />
+        ) : (
+          "Login"
+        )}
+      </button>
+    </form>
+  );
 };
+
 export default LoginForm;

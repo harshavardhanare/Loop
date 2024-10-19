@@ -1,7 +1,7 @@
 "use client";
 
-import CursorImage from '../assets/images/cursor.png';
-import MessageImage from '../assets/images/message.png';
+import CursorImage from '../src/assets/images/cursor.png';
+import MessageImage from '../src/assets/images/message.png';
 import { motion } from 'framer-motion';
 import { AnimatedGradientTextDemo } from './animatedtext';
 

@@ -1,5 +1,5 @@
 "use client"
-import appScreen from "../assets/images/product.avif";
+import appScreen from "../src/assets/images/product.avif";
 export const ProductShowcase = () => {
   return (
     <div className="relative min-h-screen  w-screen bg-black text-white bg-gradient-to-b from-black to-[#5D2CA8] py-[72px] sm:py-24">
