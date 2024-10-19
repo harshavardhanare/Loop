@@ -1,6 +1,6 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import Layout from "./components/layout/Layout";
-
+import Messages from "./pages/Messages";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/auth/LoginPage";
 import SignUpPage from "./pages/auth/SignUpPage";
@@ -74,6 +74,10 @@ function App() {
         )}
         {role === "user" && (
           <>
+          <Route
+          path="/messages"
+          element={authUser ? <Layout><Messages /></Layout> : <Landing />}
+        />
             <Route
               path="/notifications"
               element={

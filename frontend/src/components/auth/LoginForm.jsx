@@ -30,6 +30,7 @@ const LoginForm = () => {
     onSuccess: (response) => {
       const userRole = response.data.role;
       console.log("response", response);
+      localStorage.setItem("userRole", userRole);
 
       queryClient.invalidateQueries({ queryKey: ["authUser"] });
       toast.success("Login successful");
