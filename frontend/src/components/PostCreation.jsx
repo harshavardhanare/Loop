@@ -2,26 +2,29 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { axiosInstance } from "../lib/axios";
 import toast from "react-hot-toast";
-import { Image, Loader } from "lucide-react";
+import { Image, Loader, Video } from "lucide-react";
 
 const PostCreation = ({ user }) => {
 	const [content, setContent] = useState("");
 	const [image, setImage] = useState(null);
 	const [imagePreview, setImagePreview] = useState(null);
+	const [video, setVideo] = useState(null);
+	const [videoPreview, setVideoPreview] = useState(null);
 
 	const queryClient = useQueryClient();
 
 	const { mutate: createPostMutation, isPending } = useMutation({
-		mutationFn: async (postData) => {
-			const res = await axiosInstance.post("/posts/create", postData, {
-				headers: { "Content-Type": "application/json" },
-			});
-			return res.data;
+		mutationFn: async (formData) => {
+			const res = await axiosInstance.post("/posts/create", formData);
+			return res.data; // Assuming the backend returns the created post, including media URLs
 		},
-		onSuccess: () => {
+		onSuccess: (post) => {
 			resetForm();
 			toast.success("Post created successfully");
 			queryClient.invalidateQueries({ queryKey: ["posts"] });
+
+			// Optional: If you want to do something with the returned post (e.g., log URLs)
+			console.log("Post created with URLs:", post.contentimg, post.contentvideo);
 		},
 		onError: (err) => {
 			toast.error(err.response.data.message || "Failed to create post");
@@ -30,10 +33,21 @@ const PostCreation = ({ user }) => {
 
 	const handlePostCreation = async () => {
 		try {
-			const postData = { content };
-			if (image) postData.image = await readFileAsDataURL(image);
+			const formData = new FormData();
+			formData.append("content", content);
+			
+			// Append the image file if it's present
+			if (image) {
+				formData.append("image", image);
+			}
 
-			createPostMutation(postData);
+			// Append the video file if it's present
+			if (video) {
+				formData.append("video", video);
+			}
+
+			// Trigger the mutation to create the post
+			createPostMutation(formData);
 		} catch (error) {
 			console.error("Error in handlePostCreation:", error);
 		}
@@ -43,15 +57,24 @@ const PostCreation = ({ user }) => {
 		setContent("");
 		setImage(null);
 		setImagePreview(null);
+		setVideo(null);
+		setVideoPreview(null);
 	};
 
-	const handleImageChange = (e) => {
+	const handleFileChange = (e) => {
 		const file = e.target.files[0];
-		setImage(file);
-		if (file) {
+		const fileType = file?.type.split("/")[0];
+
+		if (fileType === "image") {
+			setImage(file);
+			setVideo(null);
 			readFileAsDataURL(file).then(setImagePreview);
-		} else {
+			setVideoPreview(null);
+		} else if (fileType === "video") {
+			setVideo(file);
+			setImage(null);
 			setImagePreview(null);
+			readFileAsDataURL(file).then(setVideoPreview);
 		}
 	};
 
@@ -82,12 +105,18 @@ const PostCreation = ({ user }) => {
 				</div>
 			)}
 
+			{videoPreview && (
+				<div className='mt-4'>
+					<video controls src={videoPreview} className='w-full h-auto rounded-lg' />
+				</div>
+			)}
+
 			<div className='flex justify-between items-center mt-4'>
 				<div className='flex space-x-4'>
 					<label className='flex items-center text-info hover:text-info-dark transition-colors duration-200 cursor-pointer'>
 						<Image size={20} className='mr-2' />
-						<span>Photo</span>
-						<input type='file' accept='image/*' className='hidden' onChange={handleImageChange} />
+						<span>Photo/Video</span>
+						<input type='file' accept='image/*,video/*' className='hidden' onChange={handleFileChange} />
 					</label>
 				</div>
 

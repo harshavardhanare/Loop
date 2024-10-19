@@ -10,7 +10,7 @@ import PostAction from "./PostAction";
 
 const Post = ({ post }) => {
 	const { postId } = useParams();
-
+console.log("post",post)
 	const { data: authUser } = useQuery({ queryKey: ["authUser"] });
 	const [showComments, setShowComments] = useState(false);
 	const [newComment, setNewComment] = useState("");
@@ -116,7 +116,19 @@ const Post = ({ post }) => {
 					)}
 				</div>
 				<p className='mb-4'>{post.content}</p>
-				{post.image && <img src={post.image} alt='Post content' className='rounded-lg w-full mb-4' />}
+
+				{/* Displaying image if available */}
+				{post.contentimg && (
+					<img src={post.contentimg} alt='Post content' className='rounded-lg w-full mb-4' />
+				)}
+
+				{/* Displaying video if available */}
+				{post.contentvideo && (
+					<video controls className='rounded-lg w-full mb-4'>
+						<source src={post.contentvideo} type='video/mp4' />
+						Your browser does not support the video tag.
+					</video>
+				)}
 
 				<div className='flex justify-between text-info'>
 					<PostAction
@@ -179,4 +191,5 @@ const Post = ({ post }) => {
 		</div>
 	);
 };
+
 export default Post;

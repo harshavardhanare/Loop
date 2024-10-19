@@ -2,6 +2,8 @@ import cloudinary from "../lib/cloudinary.js";
 import Post from "../models/post.model.js";
 import Notification from "../models/notification.model.js";
 import { sendCommentNotificationEmail } from "../emails/emailHandlers.js";
+import path from "path";
+import multer from 'multer'
 
 export const getFeedPosts = async (req, res) => {
   try {
@@ -19,34 +21,94 @@ export const getFeedPosts = async (req, res) => {
   }
 };
 
+// Set up multer storage engine
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'uploads/'); // Specify the directory to save files
+  },
+  filename: (req, file, cb) => {
+    cb(null, `${Date.now()}-${file.originalname}`);
+  },
+});
+
+// Set up multer for image and video uploads
+const upload = multer({
+  storage,
+  fileFilter: (req, file, cb) => {
+    const ext = path.extname(file.originalname).toLowerCase();
+    if (ext !== '.png' && ext !== '.jpg' && ext !== '.jpeg' && ext !== '.mp4') {
+      return cb(new Error('Only images and videos are allowed'));
+    }
+    cb(null, true);
+  },
+});
+
+async function uploadFiletoCloudinary(file, folder, quality) {
+  const options = {
+    folder: folder, // folder name
+    resource_type: "auto", //it detects automatically file type
+  };
+  if (quality) {
+    options.quality = quality;
+  }
+  return await cloudinary.uploader.upload(file.path, options);
+}
+// Post creation controller
 export const createPost = async (req, res) => {
   try {
-    const { content, image } = req.body;
-    let newPost;
-
-    if (image) {
-      const imgResult = await cloudinary.uploader.upload(image);
-      console.log("img", imgResult);
-      newPost = new Post({
-        author: req.user._id,
-        content,
-        image: imgResult.secure_url,
-      });
-    } else {
-      newPost = new Post({
-        author: req.user._id,
-        content,
-      });
+    const { content } = req.body;
+console.log("content: " , content)
+    let newPost = { author: req.user._id, content };
+    let check=false;
+console.log("req",req.files.video)
+    let response;
+    let post;
+    // Add image URL to post if an image is uploaded
+    if (req.files.image) {
+      check = true;
+       response = await uploadFiletoCloudinary(req.files.image[0], "normalpractice");
+       post = new Post({
+         ...newPost,
+        contentimg:response.secure_url
+        });
+      // newPost.contentimg = `/uploads/${req.files.image[0].filename}`;
+      
     }
 
-    await newPost.save();
+    // Add video URL to post if a video is uploaded
+      if (req.files.video) {
+        check = true;
 
-    res.status(201).json(newPost);
+        response = await uploadFiletoCloudinary(req.files.video[0], "normalpractice");
+        post = new Post({
+        ...newPost,
+        contentvideo:response.secure_url
+        });
+      // newPost.contentvideo = `/uploads/${req.files.video[0].filename}`;
+    }
+    if(!check)
+    {
+      post = new Post({
+        ...newPost,
+        });
+    }
+console.log("response: " ,response);
+    // Create and save the post
+
+    await post.save();
+
+    res.status(201).json(post);
   } catch (error) {
-    console.error("Error in createPost controller:", error);
-    res.status(500).json({ message: "Server error" });
+    console.error('Error in createPost controller:', error);
+    res.status(500).json({ message: 'Server error' });
   }
 };
+
+
+
+
+
+
 
 export const deletePost = async (req, res) => {
   try {
