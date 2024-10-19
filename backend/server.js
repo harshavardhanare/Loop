@@ -20,7 +20,6 @@ const __dirname = path.resolve();
 
 	app.use(
 		cors({
-			origin: "https://loop-frontend-steel.vercel.app",
 			credentials: true,
 		})
 	);
