@@ -21,7 +21,7 @@ const __dirname = path.resolve();
 if (process.env.NODE_ENV !== "production") {
 	app.use(
 		cors({
-			origin: "https://loop-backend-plum.vercel.app",
+			origin: "https://loop-frontend-steel.vercel.app/",
 			credentials: true,
 		})
 	);
