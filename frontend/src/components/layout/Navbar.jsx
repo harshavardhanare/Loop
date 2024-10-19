@@ -24,6 +24,7 @@ const Navbar = () => {
 	const { mutate: logout } = useMutation({
 		mutationFn: () => axiosInstance.post("/auth/logout"),
 		onSuccess: () => {
+			localStorage.clear();
 			queryClient.invalidateQueries({ queryKey: ["authUser"] });
 		},
 	});
@@ -89,7 +90,8 @@ const Navbar = () => {
 								</Link>
 								<button
 									className='flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800'
-									onClick={() => logout()}
+									onClick={() => {logout(); 			localStorage.clear();
+									}}
 								>
 									<LogOut size={20} />
 									<span className='hidden md:inline'>Logout</span>

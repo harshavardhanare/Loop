@@ -142,6 +142,8 @@ export default function ManageUsers() {
 		mutationFn: () => axiosInstance.post("/auth/logout"),
 		onSuccess: () => {
       navigate('/')
+      localStorage.clear();
+
 			queryClient.invalidateQueries({ queryKey: ["authUser"] });
 		},
 	});
@@ -171,7 +173,7 @@ export default function ManageUsers() {
             </button>
             <button
 									className='flex items-center space-x-1 text-sm text-gray-600 hover:text-gray-800'
-									onClick={() =>{navigate('/'); logout();       
+									onClick={() =>{navigate('/'); logout();  			localStorage.clear();     
                   }}
 								>
 									<LogOut size={20} />
