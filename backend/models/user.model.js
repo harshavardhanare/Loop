@@ -27,6 +27,14 @@ const userSchema = new mongoose.Schema({
     startYear: Number,
     endYear: Number,
   }],
+  phoneNumber: { type: String, required: true }, // New field
+gender: { 
+  type: String, 
+  enum: ["Male", "Female", "Other"], 
+  required: true 
+}, // New field with enum constraint
+country: { type: String, required: true }, // New field
+
   connections: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",

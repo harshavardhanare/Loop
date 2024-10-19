@@ -8,49 +8,57 @@ import nodemailer from "nodemailer"; // or any email library you prefer
 import dotenv from "dotenv"
 dotenv.config();
 
+
 export const signup = async (req, res) => {
   try {
-    const { name, username, email, password } = req.body;
+    const { name, username, email, password, phoneNumber, gender, country } = req.body;
 
-    if (!name || !username || !email || !password) {
+    // Validate required fields
+    if (!name || !username || !email || !password || !phoneNumber || !gender || !country) {
       return res.status(400).json({ message: "All fields are required" });
     }
+
+    // Check if email already exists
     const existingEmail = await User.findOne({ email });
     if (existingEmail) {
       return res.status(400).json({ message: "Email already exists" });
     }
 
+    // Check if username already exists
     const existingUsername = await User.findOne({ username });
     if (existingUsername) {
       return res.status(400).json({ message: "Username already exists" });
     }
 
+    // Validate password length
     if (password.length < 6) {
-      return res
-        .status(400)
-        .json({ message: "Password must be at least 6 characters" });
+      return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
+    // Hash password
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
+    // Create new user
     const user = new User({
       name,
+      username,
       email,
       password: hashedPassword,
-      username,
+      phoneNumber,
+      gender,
+      country,
     });
 
     await user.save();
 
-
     res.status(201).json({ message: "User registered successfully" });
-
   } catch (error) {
-    console.log("Error in signup: ", error.message);
+    console.error("Error in signup: ", error.message);
     res.status(500).json({ message: "Internal server error" });
   }
 };
+
 
 export const login = async (req, res) => {
   try {
