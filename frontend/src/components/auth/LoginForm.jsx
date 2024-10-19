@@ -4,6 +4,7 @@ import { axiosInstance } from "../../lib/axios";
 import toast from "react-hot-toast";
 import { Loader } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -66,7 +67,7 @@ const LoginForm = () => {
         className="input input-bordered w-full"
         required
       />
-
+<Link className="w-full mt-6 text-sm text-blue-900 hover:text-blue-500 hover:underline" to='/forgotPassword'>Forgot Password?</Link>
 <button type="submit" className="btn btn-primary w-full">
         {path.includes("admin") ? (
           isLoading2 ? (

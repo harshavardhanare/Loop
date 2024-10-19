@@ -4,6 +4,7 @@ import CursorImage from '../src/assets/images/cursor.png';
 import MessageImage from '../src/assets/images/message.png';
 import { motion } from 'framer-motion';
 import { AnimatedGradientTextDemo } from './animatedtext';
+import { Link } from 'react-router-dom';
 
 export const Hero = () => {
   return (
@@ -36,7 +37,7 @@ export const Hero = () => {
         </div>
         
         <div className="flex justify-center mt-8">
-          <button className='bg-white text-black py-3 px-5 rounded-lg font-medium'>Get Started</button>
+          <Link to='/signup' className='bg-white text-black py-3 px-5 rounded-lg font-medium'>Get Started</Link>
         </div>
       </div>
     </div>

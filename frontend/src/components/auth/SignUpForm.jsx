@@ -3,8 +3,9 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { axiosInstance } from "../../lib/axios.js";
 import { toast } from "react-hot-toast";
 import { Loader } from "lucide-react";
-
+import { useNavigate } from "react-router-dom";
 const SignUpForm = () => {
+	const navigate = useNavigate();
 	const [name, setName] = useState("");
 	const [email, setEmail] = useState("");
 	const [username, setUsername] = useState("");
@@ -18,8 +19,8 @@ const SignUpForm = () => {
 			return res.data;
 		},
 		onSuccess: () => {
+			navigate('/login')
 			toast.success("Account created successfully");
-			queryClient.invalidateQueries({ queryKey: ["authUser"] });
 		},
 		onError: (err) => {
 			toast.error(err.response.data.message || "Something went wrong");

@@ -15,6 +15,9 @@ import Landing from "./Landing/Landing";
 import LoginForm from "./components/auth/LoginForm";
 import ManageUsers from "./components/admin/ManageUsers";
 import ViewUserPosts from "./components/admin/ViewUserPosts";
+import NotFoundPage from "./NotFoundPage";
+import ForgotPasswordForm from "./components/auth/ForgotPasswordForm";
+import ResetPasswordForm from "./components/auth/ResetPasswordForm";
 
 function App() {
   const { data: authUser, isLoading } = useQuery({
@@ -37,6 +40,7 @@ function App() {
   return (
     <>
       <Routes>
+      <Route path="*" element={<NotFoundPage/>}/>
         <Route
           path="/"
           element={
@@ -61,6 +65,18 @@ function App() {
         <Route
           path="/login"
           element={!authUser ? <LoginPage /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/forgotPassword"
+          element={!authUser ? <ForgotPasswordForm /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/reset-password/:id"
+          element={!authUser ? <ResetPasswordForm /> : <Navigate to="/" />}
+        />
+        <Route
+          path="/resetPassword"
+          element={!authUser ? <ResetPasswordForm /> : <Navigate to="/" />}
         />
         <Route
           path="/admin/login"
