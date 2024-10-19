@@ -30,6 +30,10 @@ if (process.env.NODE_ENV !== "production") {
 app.use(express.json({ limit: "5mb" })); // parse JSON request bodies
 app.use(cookieParser());
 
+app.get('/',(req, res) => {
+	res.send("hii");
+})
+
 app.use("/api/v1/auth", authRoutes);
 import adminRoutes from "./routes/admin.route.js";
 app.use("/api/v1/admin", adminRoutes);
